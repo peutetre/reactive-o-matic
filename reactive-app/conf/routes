@@ -5,6 +5,8 @@
 # Home page
 GET     /                           controllers.Application.index
 GET     /hi                         controllers.Application.init
+GET     /show                       controllers.Application.show
+GET     /latest                     controllers.Application.latest
 
 GET		/stream/:id					controllers.Application.stream(id)
 

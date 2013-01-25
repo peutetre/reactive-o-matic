@@ -1,0 +1,86 @@
+@(message: String="")
+
+@moreHead = {
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+}
+
+@main("", moreHead) {
+<style>
+    html, body, #map-container {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    }
+</style>
+	<script type="text/javascript" charset="utf-8">
+      var map,
+          bounds = new google.maps.LatLngBounds();
+          markers = new google.maps.MVCArray();
+
+      function initialize() {
+        var mapOptions = {
+            center: new google.maps.LatLng(48.8566667, 2.3509871),
+            zoom: 14,
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+        map = new google.maps.Map(document.getElementById('map-container'),mapOptions);
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+      var req = new XMLHttpRequest();
+      setInterval(function(){
+        req.open('GET', 'latest', true);
+        req.onreadystatechange = onLatestReceived
+        req.send(null);
+
+      },1000)
+
+      function onLatestReceived(aEvt) {
+          if (req.readyState == 4) {
+             if(req.status == 200)
+              updateMapDisplay(JSON.parse(req.responseText));
+             else
+              alert("bordel");
+          }
+    }
+
+        function clearMap(){
+            for (var i = 0; i < markers.length; i++ ) {
+                markers[i].setMap(null);
+            }
+        }
+        function updateMapDisplay(jsArray){
+            var self = this,
+                minL = Math.min.apply(Math,jsArray.map(function(e){return e.latency})),
+                maxL = Math.max.apply(Math,jsArray.map(function(e){return e.latency}));
+
+            clearMap();
+
+            jsArray.forEach(function(i){
+
+                i.latency = (maxL-i.latency)/(maxL-minL)
+                console.log(i);
+                var pos = i.position || "48.8566667, 2.3509871",
+                    coords = pos.split(','),
+                    lat = coords[0] || 48.8566667,
+                    lng = coords[1] || 2.3509871,
+                    ll = new google.maps.LatLng(lat,lng),
+                    POIMarker = new google.maps.Marker({
+                        position: ll,
+                        map: self.map,
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            strokeColor: "hsl("+(i.latency*120)+",80%,50%)",
+                            scale : 20
+                        }
+                    });
+                    self.markers.push(POIMarker);
+                    self.bounds.extend(ll);
+            })
+        }
+    </script>
+
+    <div id="map-container"></div>
+}

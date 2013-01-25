@@ -48,6 +48,10 @@
           console.log("Received event from WS : " + event.data);
           app.pong(event.data);
         }
+        app.connection.onerror = function (event) {
+          console.log("Received error from WS : " + event.data);
+        }
+
     }
 
     app.connectionOpened = function() {
