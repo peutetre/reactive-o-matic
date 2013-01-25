@@ -1,9 +1,18 @@
 @(message: String)
 
 @main("Welcome to Play 2.1") {
-    
-    <h1>Reactive-o-matic</h1>
 
+	<div class="grid">
+		<header>
+			<h1>Reactive-O-Matic</h1>
+		</header>
+
+		<h2 class="catchphrase">Analyse your <span>connection</span>.</h2>
+	</div>
+
+	<!-- Insérer map ici -->
+
+	<img class="map" src="/assets/images/map.jpg" alt="">
 
 	UUID:<input type="text" id="UUID" /><br/>
 	Message:<input type="text" id="msg" value='{"msg": 1}' /><br/>

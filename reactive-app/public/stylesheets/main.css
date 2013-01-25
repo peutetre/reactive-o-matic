@@ -1,0 +1,54 @@
+/* -- @font-face
+------------------- */
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+@import url(http://fonts.googleapis.com/css?family=Amaranth);
+
+/* -- Global
+------------------- */
+
+body {
+	font: 1rem/1.125rem "Open Sans", sans-serif;
+	background: url(/assets/images/main-bg.jpg);
+}
+
+.grid {
+	width: 100%;
+	max-width: 1000px;
+	margin: auto;
+	/*overflow: hidden;*/
+}
+
+/* -- Header
+------------------- */
+
+header {
+	font: 1.125rem/1.25rem "Amaranth", sans-serif;
+	color: #333333;
+	padding: 10px 0 20px;
+	border-bottom: 1px solid #999999;
+}
+
+/* -- Catchphrase
+------------------- */
+
+.catchphrase {
+	font: 2.125rem/1.25rem "Amaranth", sans-serif;
+	text-align: center;
+	padding: 80px 0;
+	color: #999999;
+}
+
+.catchphrase span {
+	color: #333333;
+}
+
+/* -- Map
+------------------- */
+
+.map {
+	margin: auto;
+	display: block;
+	
+	-webkit-background-size: cover;
+}

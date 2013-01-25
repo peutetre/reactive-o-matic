@@ -1,14 +1,37 @@
 <html>
-    <link rel="stylesheet" media="screen" href="/assets/css/reset.css">
-    <link rel="stylesheet" media="screen" href="/assets/css/app.css">
+
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" media="screen" href="/assets/css/reset.css">
+        <link rel="stylesheet" media="screen" href="/assets/css/app.css">
+    </head>
+
     <body>
-        <h1>Reactive-O-matic</h1>
-        <div class="logs-container">
+
+        <div id="wrapper">
+            <header>
+                <h1 class="left">Your dashboard</h1>
+                <button class="settings right">Settings</button>
+            </header>
+
+            <div class="logs-container">
+                <p class="error">Error connection</p>
+                <p class="success">Pong from server</p>
+                <p class="loading">Trying to connect to the server</p>
+            </div>
+
+            <nav>
+                <ul>
+                    <li><button class="stop">Stop</button></li>
+                    <li><button class="play">Play</button></li>
+                    <li><button class="reset">Reset</button></li>
+                </ul>
+            </nav>
         </div>
-        <button class="play">Play</button>
-        <button class="stop">Stop</button>
-        <button class="reset">Reset console</button>
+
         <script src="/assets/js/app.js"></script>
         <script src="/assets/js/geolocation.js"></script>
     </body>
+
 </html>

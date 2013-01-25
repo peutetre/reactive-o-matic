@@ -1,4 +1,122 @@
+/* -- Global
+------------------- */
+
+body {
+	background: #ebebeb;
+	font: 1rem/1.125rem "Helvectica", sans-serif;
+}
+
+.left { float: left; }
+.right { float: right; }
+
+/* -- Header
+------------------- */
+
+header {
+	height: 50px;
+	background: #b3b3b3;
+	border-bottom: 2px solid #999999;
+	background: -webkit-linear-gradient(top, #fff, #e5e5e5);
+}
+
+	header h1 {
+		color: #404040;
+		font-size: 1.125rem;
+		line-height: 50px;
+		margin-left: 10px;
+	}
+
+	header .settings {
+		width: 35px;
+		height: 35px;
+		background: url(../images/settings-icon.png) 5px 5px no-repeat;
+		background-size: 22px 22px;
+		text-indent: -9000px;
+		line-height: 70px;
+		border: 2px solid #999999;
+		margin: 7px 10px 0 0;
+
+		border-radius: 5px;
+	}
+
+/* -- Console
+------------------- */
+
 .logs-container {
+	font: 1.125rem/1.25rem "Monaco", monospace;
+	background: #41484d;
+	margin: 30px auto 0;
+	padding: 10px 10px 0 10px;
+	width: 92%;
     height: 300px;
     overflow-y: auto;
+    border-radius: 2px;
 }
+	.logs-container > * {
+		padding: 0 0 10px 0;
+	}
+	.logs-container > *:before {
+		content: ">";
+		padding-right: 10px;
+		color: #d9d9d9;
+	}
+
+	.logs-container .error { color: #de8686; }
+	.logs-container .success { color: #68db8e; }
+	.logs-container .loading { color: #808080; }
+	.logs-container .loading:before {
+		content: "";
+		padding-right: 0;
+	}
+
+/* -- Nav
+------------------- */
+
+nav {
+	height: 106px;
+	background: url(../images/bg-nav.png) no-repeat;
+	position: relative;
+	margin: 20px auto 0;
+
+	background-size: 320px 106px;
+}
+
+nav li { float: left; }
+
+nav button {
+	outline: 0;
+	border: 0;
+	display: block;
+	text-indent: -9000px;
+	position: absolute;
+}
+
+	nav .stop {
+		width: 33px;
+		height: 34px;
+		top: 50px;
+		left: 40px;
+
+		background: url(../images/nav-stop.png) no-repeat;
+		background-size: 33px 34px;
+	}
+
+	nav .play {
+		width: 40px;
+		height: 49px;
+		top: 40px;
+		left: 145px;
+
+		background: url(../images/nav-play.png) no-repeat;
+		background-size: 40px 49px;
+	}
+
+	nav .reset {
+		width: 32px;
+		height: 34px;
+		top: 50px;
+		left: 250px;
+
+		background: url(../images/nav-reset.png) no-repeat;
+		background-size: 32px 34px;
+	}
