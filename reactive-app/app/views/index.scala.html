@@ -3,5 +3,36 @@
 @main("Welcome to Play 2.1") {
     
     <h1>Reactive-o-matic</h1>
-    
+
+
+	UUID:<input type="text" id="UUID" /><br/>
+	Message:<input type="text" id="msg" /><br/>
+	<button id="send">Send</button>
+
+	<script type="text/javascript" charset="utf-8">
+		var ws = null,
+			ws_onmessage = function(e) {
+				// Global so you can override it ;)
+				console.log("rec:", e.data);
+			}
+
+		window.addEventListener("load", function() {
+			document.getElementById("UUID").value = ~~(Math.random() * 9000)  +1000;
+			var button = document.getElementById("send");
+			button.addEventListener("click", send, false);
+		}, false);
+
+		function send() {
+			if(!ws) {
+				var uuid = document.getElementById("UUID").value;
+				ws = WebSocket("ws://localhost:9000/hi?uuid=" + uuid);
+				ws.onmessage = ws_onmessage;
+				ws.onopen = function(e) {
+					ws.send(document.getElementById("msg").value);
+				}
+				return;
+			}
+			ws && ws.send(document.getElementById("msg").value);
+		}
+	</script>    
 }
