@@ -1,0 +1,4 @@
+.logs-container {
+    height: 150px;
+    overflow-y: auto;
+}
