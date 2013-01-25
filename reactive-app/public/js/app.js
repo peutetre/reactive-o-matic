@@ -40,7 +40,7 @@
     }
 
     app.initWS = function() {
-        app.connection = new WebSocket("ws://localhost:9000/hi?uuid=" + new Date().getTime());
+        app.connection = new WebSocket("ws://" + window.location.host + "/hi?uuid=" + new Date().getTime());
         app.connection.onopen = function (event) {
           app.connectionOpened();
         };
