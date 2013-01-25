@@ -22,7 +22,7 @@
 
         $(".stop")[0].addEventListener("click", function() {
             app.logs("User triggered Stop button");
-            app.stopped;
+            app.stopped = true;
         });
 
         $(".reset")[0].addEventListener("click", function() {
@@ -32,30 +32,18 @@
     }
 
     app.initConnection = function() {
-        var req = new XMLHttpRequest();
-        req.open("GET", "/hi?me=" + app.me.id, true);
-        req.send(null);
-
-        req.onreadystatechange = function() {
-            if (req.readyState === 4) {
-                if(req.status === 200) {
-                    ROM.geolocation.init();
-                    app.initWS();
-                } else {
-                    console.log("Identification refused : " + app.me.id);
-                }
-            }
-        };
+        ROM.geolocation.init();
+        app.initWS();
     }
 
     app.initWS = function() {
-        app.connection = new WebSocket("/ping");
+        app.connection = new WebSocket("ws://localhost:9000/hi?uuid=" + new Date().getTime());
         app.connection.onopen = function (event) {
           app.connectionOpened();
         };
         app.connection.onmessage = function (event) {
           console.log("Received event from WS : " + event.data);
-
+          app.pong(event.data);
         }
     }
 
@@ -83,12 +71,13 @@
         $(".logs-container")[0].innerHTML = "";
     }
 
-    app.pong = function() {
+    app.pong = function(data) {
+        app.logs("Received pong : " + data);
         if(!app.stopped) {
             app.sendPing();
         }
         else {
-            console.log("Applciation stopped do break ping-pong loop")
+            console.log("Application stopped do break ping-pong loop")
         }
     }
 
