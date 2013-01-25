@@ -1,11 +1,13 @@
 package controllers
 
 import play.api._
-import libs.iteratee.{Enumeratee, Iteratee, Concurrent, Enumerator}
-import libs.json.{JsString, JsValue, Json}
+import libs.iteratee.{Iteratee, Concurrent, Enumerator}
+import libs.json.{JsValue, Json}
 import play.api.mvc._
 import java.util.Date
-
+import models.Ping
+import concurrent.ExecutionContext
+import ExecutionContext.Implicits.global
 
 object Application extends Controller {
 
@@ -18,9 +20,23 @@ object Application extends Controller {
     val e = Rooms.enter(id)
     val i = Iteratee.foreach[String](s => {
       println(s)
-      Rooms.pong(id, Json.obj( "echo" -> s, "timestamp" -> new Date().getTime, "uuid" -> id))
+
+      val json = Json.parse(s)
+      Ping.insert(json).map( err => {
+        println("After saving")
+        Rooms.pong(id, Json.obj( "echo" -> json, "timestamp" -> new Date().getTime, "uuid" -> id))
+      })
+
     })
     (i,e)
+  }
+
+  def test = Action(parse.json) {  request =>
+    Async {
+      Ping.insert(request.body).map( lastError =>
+        Ok("Mongo LastErorr:%s".format(lastError))
+      )
+    }
   }
 }
 
