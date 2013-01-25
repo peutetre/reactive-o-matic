@@ -19,6 +19,7 @@
     app.bindViewEvents = function() {
         $(".play")[0].addEventListener("click", function() {
             app.logs("User triggered Play button");
+            app.stopped = false;
             app.initConnection();
         });
 
