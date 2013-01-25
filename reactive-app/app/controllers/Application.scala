@@ -2,7 +2,7 @@ package controllers
 
 import play.api._
 import libs.iteratee.{Iteratee, Concurrent, Enumerator}
-import libs.json.{JsValue, Json}
+import libs.json.{JsValue, Json, JsObject}
 import play.api.mvc._
 import java.util.Date
 import models.Ping
@@ -19,13 +19,24 @@ object Application extends Controller {
     val id = request.getQueryString("uuid").getOrElse("empty")
     val e = Rooms.enter(id)
     val i = Iteratee.foreach[String](s => {
-      val json = Json.parse(s)
+      // Parse json and add in the UUID
+      val json = Json.parse(s).as[JsObject] ++ Json.obj("uuid" -> id)
       Ping.insert(json).map( err => {
         Rooms.pong(id, Json.obj( "echo" -> json, "timestamp" -> new Date().getTime, "uuid" -> id))
       })
 
     })
     (i,e)
+  }
+
+  def stream(id: String) = Action {
+    Async {
+      val pings = Ping.byUUID(id)    
+      pings.map { p =>
+        Ok(Json.stringify(p))
+      }
+      
+    }
   }
 }
 

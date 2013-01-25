@@ -9,6 +9,7 @@
 	Message:<input type="text" id="msg" value='{"msg": 1}' /><br/>
 	<button id="send">Send</button>
 
+
 	<script type="text/javascript" charset="utf-8">
 		var ws = null,
 			ws_onmessage = function(e) {
@@ -18,8 +19,10 @@
 
 		window.addEventListener("load", function() {
 			document.getElementById("UUID").value = ~~(Math.random() * 9000)  +1000;
-			var button = document.getElementById("send");
+			var button = document.getElementById("send"),
+				history = document.getElementById("get");
 			button.addEventListener("click", send, false);
+			//history.addEventListener("click", show, false);
 		}, false);
 
 		function send() {
@@ -34,6 +37,10 @@
 				return;
 			}
 			ws && ws.send(document.getElementById("msg").value);
+		}
+
+		function show() {
+
 		}
 	</script>    
 }
