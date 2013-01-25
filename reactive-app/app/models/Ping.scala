@@ -14,12 +14,7 @@ object Ping {
   val db = ReactiveMongoPlugin.db
   lazy val collection = db("pings")
 
-  def insert(ping:JsValue) = {
-    collection.insert[JsValue](ping).map { err =>
-      println(err.toString)
-      err
-    }
-  }
+  def insert(ping:JsValue) = collection.insert[JsValue](ping)
 
   def byUUID(uuid:String):Future[JsArray] = {
     val qb = QueryBuilder().query(Json.obj( "uuid" -> uuid )).sort( "time" -> SortOrder.Ascending)

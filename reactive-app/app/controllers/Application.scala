@@ -19,24 +19,13 @@ object Application extends Controller {
     val id = request.getQueryString("uuid").getOrElse("empty")
     val e = Rooms.enter(id)
     val i = Iteratee.foreach[String](s => {
-      println(s)
-
       val json = Json.parse(s)
       Ping.insert(json).map( err => {
-        println("After saving")
         Rooms.pong(id, Json.obj( "echo" -> json, "timestamp" -> new Date().getTime, "uuid" -> id))
       })
 
     })
     (i,e)
-  }
-
-  def test = Action(parse.json) {  request =>
-    Async {
-      Ping.insert(request.body).map( lastError =>
-        Ok("Mongo LastErorr:%s".format(lastError))
-      )
-    }
   }
 }
 
