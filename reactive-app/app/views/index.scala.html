@@ -25,6 +25,7 @@
 		function send() {
 			if(!ws) {
 				var uuid = document.getElementById("UUID").value;
+				document.getElementById("UUID").disabled = true;
 				ws = new WebSocket("ws://localhost:9000/hi?uuid=" + uuid);
 				ws.onmessage = ws_onmessage;
 				ws.onopen = function(e) {
