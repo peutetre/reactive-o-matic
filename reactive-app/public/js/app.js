@@ -56,6 +56,7 @@
     app.sendPing = function() {
         console.log("Sending ping")
         ROM.geolocation.getPosition(function(latitude, longitude) {
+            console.log("Current location : " + latitude + " - " + longitude);
             app.lastPingDate = new Date();
             var ping = { latitude: latitude, longitude: longitude, delay: app.delay };
             app.logs("Ping " + JSON.stringify(ping) + " ...");

@@ -10,6 +10,7 @@ import concurrent.ExecutionContext
 import ExecutionContext.Implicits.global
 
 object Application extends Controller {
+  val LOGGER = play.api.Logger("APPLICATION")
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -19,6 +20,7 @@ object Application extends Controller {
     val id = request.getQueryString("uuid").getOrElse("empty")
     val e = Rooms.enter(id)
     val i = Iteratee.foreach[String](s => {
+      LOGGER.debug("Received ping : " + s)
       // Parse json and add in the UUID
       val json = Json.parse(s).as[JsObject] ++ Json.obj("uuid" -> id)
       Ping.insert(json).map( err => {
