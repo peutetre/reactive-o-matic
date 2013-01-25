@@ -3,7 +3,9 @@
     function $(selector, context) { return (context || window.document.body).querySelectorAll(selector); }
 
     var app = {
-        stopped: false
+        stopped: false,
+        lastPingDate: null,
+        delay: -1
     };
 
     app.init = function() {
@@ -54,7 +56,8 @@
     app.sendPing = function() {
         console.log("Sending ping")
         ROM.geolocation.getPosition(function(latitude, longitude) {
-            var ping = { latitude: latitude, longitude: longitude };
+            app.lastPingDate = new Date();
+            var ping = { latitude: latitude, longitude: longitude, delay: app.delay };
             app.logs("Ping " + JSON.stringify(ping) + " ...");
             app.connection.send(JSON.stringify(ping));
             console.log("Ping sent")
@@ -72,8 +75,9 @@
     }
 
     app.pong = function(data) {
-        app.logs("Received pong : " + data);
+        app.logs("Pong : " + data);
         if(!app.stopped) {
+            app.delay = Math.abs((new Date()).getTime() - app.lastPingDate.getTime());
             app.sendPing();
         }
         else {
