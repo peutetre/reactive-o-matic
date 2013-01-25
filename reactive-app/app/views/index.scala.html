@@ -6,7 +6,8 @@
 
 
 	UUID:<input type="text" id="UUID" /><br/>
-	Message:<input type="text" id="msg" value='{"msg": 1}' /><br/>
+	Latency:<input type="text" id="latency" value='0.4' /><br/>
+	GEO: <input type="text" id="geo" value='' /><br/>
 	<button id="send">Send</button>
 
 
@@ -23,6 +24,15 @@
 				history = document.getElementById("get");
 			button.addEventListener("click", send, false);
 			//history.addEventListener("click", show, false);
+
+			navigator.geolocation.watchPosition(function(e){
+				document.getElementById("geo").value = e.coords.latitude + "," + e.coords.longitude;
+
+			}, function(e){console.log("errr");}, {
+        		enableHighAccuracy: true,
+        		maximumAge: 5000
+      		});
+
 		}, false);
 
 		function send() {

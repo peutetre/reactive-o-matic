@@ -1,3 +1,6 @@
+window.latitude = 48.87;
+window.longitude = 2.33;
+
 (function(win) {
 
     function $(selector, context) { return (context || window.document.body).querySelectorAll(selector); }
@@ -61,17 +64,20 @@
     app.sendPing = function() {
         console.log("Sending ping")
         ROM.geolocation.getPosition(function(latitude, longitude) {
+            window.latitude = latitude;
+            window.longitude = longitude;
+        });
             console.log("Current location : " + latitude + " - " + longitude);
             app.lastPingDate = new Date();
-            var ping = { latitude: latitude, longitude: longitude, delay: app.delay };
+            var ping = { uuid: app.me.id, position: latitude + "," + longitude, latency: app.delay};
             app.logs("Ping " + JSON.stringify(ping) + " ...");
             app.connection.send(JSON.stringify(ping));
             console.log("Ping sent")
-        })
+       // })
     }
 
     app.logs = function(message) {
-        console.log(message)
+        console.log(message)    
         var $logsContainer = $(".logs-container")[0];
         $logsContainer.innerHTML = "<p>[" + (new Date()).toISOString() + "] " + message + "</p>" + $logsContainer.innerHTML;
     }
