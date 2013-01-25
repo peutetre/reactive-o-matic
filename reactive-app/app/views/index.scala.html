@@ -25,7 +25,7 @@
 		function send() {
 			if(!ws) {
 				var uuid = document.getElementById("UUID").value;
-				ws = WebSocket("ws://localhost:9000/hi?uuid=" + uuid);
+				ws = new WebSocket("ws://localhost:9000/hi?uuid=" + uuid);
 				ws.onmessage = ws_onmessage;
 				ws.onopen = function(e) {
 					ws.send(document.getElementById("msg").value);
