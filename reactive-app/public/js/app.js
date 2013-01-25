@@ -26,8 +26,8 @@
         });
 
         $(".reset")[0].addEventListener("click", function() {
-            app.logs("User triggered Reset button");
             app.clearLogs();
+            app.logs("User triggered Reset button");
         });
     }
 
@@ -76,7 +76,7 @@
     app.logs = function(message) {
         console.log(message)
         var $logsContainer = $(".logs-container")[0];
-        $logsContainer.innerHTML = "<p>" + message + "</p>" + $logsContainer.innerHTML;
+        $logsContainer.innerHTML = "<p>[" + (new Date()).toISOString() + "] " + message + "</p>" + $logsContainer.innerHTML;
     }
 
     app.clearLogs = function() {
