@@ -11,6 +11,7 @@ import ExecutionContext.Implicits.global
 
 object Application extends Controller {
   val LOGGER = play.api.Logger("APPLICATION")
+  val (broadcastToMap, channelToMap) = play.api.libs.iteratee.Concurrent.broadcast[JsValue];
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -32,6 +33,7 @@ object Application extends Controller {
     val i = Iteratee.foreach[String] { s =>
         val json = Json.parse(s)
         json.transform(pingRead).map { js =>
+          channelToMap.push(js)
           Ping.insert(json).map { err =>
             Rooms.pong(id, Json.obj("echo" -> js, "timestamp" -> new Date().getTime, "uuid" -> id))
           }
@@ -43,6 +45,12 @@ object Application extends Controller {
     }
     (i,e)
   }
+
+  def mapStream = Action({
+    Ok.feed(
+      broadcastToMap &> play.api.libs.EventSource()
+    ).as("text/event-stream")
+  })
 
   def stream(id: String) = Action {
     Async {
@@ -69,12 +77,12 @@ object Rooms {
   var clients = Map[String, Concurrent.Channel[String]]()
 
   def enter(uuid:String): Enumerator[String] = {
-      val e = Concurrent.unicast[String]( channel => {
-          clients += (uuid -> channel)
-          println("New client "+uuid)
-        }, () => clients = clients - uuid)
-        e
-      }
+    val e = Concurrent.unicast[String]( channel => {
+      clients += (uuid -> channel)
+      println("New client "+uuid)
+    }, () => clients = clients - uuid)
+    e
+  }
 
   def pong(uuid:String, s:JsValue) = {
     clients(uuid).push(Json.stringify(s))

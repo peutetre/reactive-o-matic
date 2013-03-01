@@ -8,6 +8,8 @@ GET     /hi                         controllers.Application.init
 GET     /show                       controllers.Application.show
 GET     /latest                     controllers.Application.latest
 
+GET     /mapStream                  controllers.Application.mapStream
+
 GET		/stream/:id					controllers.Application.stream(id)
 
 # Map static resources from the /public folder to the /assets URL path
