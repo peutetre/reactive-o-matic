@@ -34,12 +34,12 @@ object Ping {
     }
   }
 
-  def lastest = {
-    collection.find[JsValue](QueryBuilder().query(BSONDocument())).toList.map { pings =>
-      pings.groupBy(_\"uuid").map{ case (uuid, ps) =>
-        (uuid.as[String] , ps.sortBy( v => (v \ "time").as[Long]).headOption)
-      }.filter(_._2.isDefined)
-       .foldLeft(JsArray(List()))((r, i) => r ++ Json.arr(Json.obj("uuid"-> i._1, "position" -> i._2.get \ "position" , "latency" -> i._2.get \ "latency")))
+  def latest(uuids:Set[String]) = {
+    val q = BSONDocument("uuid" -> BSONDocument("$in" -> BSONArray(uuids.map(s => BSONString(s)).toSeq: _*)))
+    collection.find[JsValue](QueryBuilder().sort("time"->SortOrder.Descending).query(q)).toList.map { pings =>
+      pings.groupBy(j => (j\"uuid").as[String])
+        .map(t => t._1 -> t._2.head)
+        .foldLeft(JsArray(List()))((r, i) => r ++ Json.arr(Json.obj("uuid"-> i._1, "position" -> i._2 \ "position" , "latency" -> i._2 \ "latency")))
     }
   }
 

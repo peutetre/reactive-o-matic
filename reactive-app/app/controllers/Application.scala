@@ -55,7 +55,10 @@ object Application extends Controller {
   }
 
   def show = Action(request => Ok(views.html.show()))
-  def latest = Action(Async(Ping.lastest.map(Ok(_))))
+  def latest = {
+    val online = Rooms.clients.map(_._1).toSet
+    Action(Async(Ping.latest(online).map(Ok(_))))
+  }
 
   val pingRead = Reads{ js => JsSuccess(js) } keepAnd ((__ \ "position").read[String] and
                  (__ \ "uuid").read[String] and
