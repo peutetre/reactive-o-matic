@@ -44,7 +44,7 @@ button {
     overflow: auto;
     -webkit-overflow-scrolling:touch;
     background: rgb(243, 243, 243);
-    height: -webkit-calc(100% - 150px);
+    height: -webkit-calc(100% - 170px);
     position:relative;
 }
 
