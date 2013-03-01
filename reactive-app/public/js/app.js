@@ -3,7 +3,8 @@ window.longitude = 2.33;
 
 (function(win) {
 
-    function $(selector, context) { return (context || window.document.body).querySelectorAll(selector); }
+    function $(selector, context) { return (context || window.document.body).querySelector(selector); }
+    function $$(selector, context) { return (context || window.document.body).querySelectorAll(selector); }
 
     var app = {
         stopped: false,
@@ -20,18 +21,18 @@ window.longitude = 2.33;
     };
 
     app.bindViewEvents = function() {
-        $(".play")[0].addEventListener("click", function() {
+        $(".play").addEventListener("click", function() {
             app.logs("User triggered Play button");
             app.stopped = false;
             app.initConnection();
         });
 
-        $(".stop")[0].addEventListener("click", function() {
+        $(".stop").addEventListener("click", function() {
             app.logs("User triggered Stop button");
             app.stopped = true;
         });
 
-        $(".reset")[0].addEventListener("click", function() {
+        $(".reset").addEventListener("click", function() {
             app.clearLogs();
             app.logs("User triggered Reset button");
         });
@@ -69,7 +70,7 @@ window.longitude = 2.33;
         });
             console.log("Current location : " + latitude + " - " + longitude);
             app.lastPingDate = new Date();
-            var ping = { uuid: app.me.id, position: latitude + "," + longitude, latency: app.delay};
+            var ping = { uuid: app.me.id.toString(), position: latitude + "," + longitude, latency: app.delay};
             app.logs("Ping " + JSON.stringify(ping) + " ...");
             app.connection.send(JSON.stringify(ping));
             console.log("Ping sent")
@@ -78,7 +79,7 @@ window.longitude = 2.33;
 
     app.logs = function(message) {
         console.log(message)    
-        var $logsContainer = $(".logs-container")[0];
+        var $logsContainer = $(".logs-container");
         $logsContainer.innerHTML = "<p>[" + (new Date()).toISOString() + "] " + message + "</p>" + $logsContainer.innerHTML;
     }
 
