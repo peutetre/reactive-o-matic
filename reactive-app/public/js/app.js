@@ -74,7 +74,7 @@
         console.log("Current location : ", app.lastLocation);
         app.lastPingDate = new Date();
         var ping = { 
-            uuid: app.uuid,
+            uuid: app.uuid.toString(),
             position: app.lastLocation.latitude + "," + app.lastLocation.longitude,
             latency: app.delay
         };
