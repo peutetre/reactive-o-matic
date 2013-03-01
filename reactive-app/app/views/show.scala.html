@@ -42,7 +42,7 @@
              if(req.status == 200)
               updateMapDisplay(JSON.parse(req.responseText));
              else
-              alert("bordel");
+              console.log(req.status + req.responseText);
           }
     }
 

@@ -9,6 +9,7 @@ import play.modules.reactivemongo.PlayBsonImplicits._
 import play.api.libs.json._
 import play.api.Play.current
 import ExecutionContext.Implicits.global
+import java.util.Date
 
 object Ping {
   val db = ReactiveMongoPlugin.db
@@ -19,12 +20,12 @@ object Ping {
   *
   * {
   *   uuid : "",
-  *   time : 1234,
+  *   latency : 1234,
   *   position: "lat,lng"
   * }
   *
   * */
-  def insert(ping:JsValue) = collection.insert[JsValue](ping)
+  def insert(ping:JsValue) = collection.insert[JsValue](ping.asInstanceOf[JsObject] ++ Json.obj("time"->JsNumber(new Date().getTime)))
 
   def byUUID(uuid:String):Future[JsArray] = {
     val qb = QueryBuilder().query(Json.obj( "uuid" -> uuid )).sort( "time" -> SortOrder.Ascending)
