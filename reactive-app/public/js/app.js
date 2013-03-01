@@ -86,9 +86,11 @@
     }
 
     app.sendPing = function() {
-
+      if(Date.now() - app.location.time > 4990) {
+        console.log(Date.now() - app.location.time, app.location.interval)
+      }
         if(Date.now() - app.location.time > app.location.interval) {
-          app.logs("Fetching geo");
+          app.logs("Fetching geo location");
           app.location.time = Date.now();
           ROM.geolocation.getPosition(function(latitude, longitude) {
               app.location.latitude = latitude;
@@ -112,7 +114,8 @@
             if(!app.$logsContainer) $logsContainer = $(".logs-container");
             var i = document.createElement("p");
             if (cls) i.className = cls;
-            $logsContainer.innerHTML =  "<p>[" + (new Date()).toDateString() + "] " + message + "</p>" + $logsContainer.innerHTML;
+            var formattedTime = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+            $logsContainer.innerHTML =  "<p>[" + formattedTime + "] " + message + "</p>" + $logsContainer.innerHTML;
             app.lastLogTimeStamp = (new Date).getTime();
         }
     }
