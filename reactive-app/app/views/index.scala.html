@@ -2,11 +2,12 @@
 
 @main("Reactive-O-matic") {
 	<h1>Reactive-O-matic</h1>
-	<div class="logs-container">
-	</div>
-	<button class="play">Play</button>
-	<button class="stop">Stop</button>
-	<button class="reset">Reset console</button>
+	<div class="logs-container"></div>
+    <div class="buttonbar">
+        <button class="play icon-play"></button>
+        <button class="stop icon-stop"></button>
+        <button class="reset icon-trash"></button>
+    </div>
 
 	<script src="@routes.Assets.at("js/app.js")"></script>
 	<script src="@routes.Assets.at("js/geolocation.js")"></script>

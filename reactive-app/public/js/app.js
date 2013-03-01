@@ -10,7 +10,8 @@
             latitude: 48.87,
             longitude: 2.33
         },
-        delay: -1
+        delay: -1,
+        uuid: new Date().getTime()
     };
 
     app.init = function() {
@@ -45,7 +46,7 @@
     }
 
     app.initWS = function() {
-        app.connection = new WebSocket("ws://" + window.location.host + "/hi?uuid=" + new Date().getTime());
+        app.connection = new WebSocket("ws://" + window.location.host + "/hi?uuid=" + app.uuid);
         app.connection.onopen = function (event) {
           app.connectionOpened();
         };
@@ -89,7 +90,7 @@
     }
 
     app.clearLogs = function() {
-        $(".logs-container")[0].innerHTML = "";
+        $(".logs-container").innerHTML = "";
     }
 
     app.pong = function(data) {
