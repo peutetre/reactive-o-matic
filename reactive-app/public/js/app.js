@@ -4,6 +4,7 @@
     function $$(selector, context) { return (context || window.document.body).querySelectorAll(selector); }
 
     var app = {
+        uuid: Date.now(),
         stopped: false,
         lastPingDate: null,
         location: {
@@ -13,17 +14,19 @@
             time: -1
         },
         delay: -1,
-        uuid: new Date().getTime(),
+        history: {
+          pongs: [],
+          maxPoints: 50
+        },
         retry: {
           interval: 1000,
-          count: 0
+          timer: null
         },
         $logsContainer:null,
         lastLogTimeStamp: (new Date).getTime()
     };
 
     app.init = function() {
-        app.me = { id: new Date().getTime() };
         // bind view events
         app.bindViewEvents();
     };
@@ -54,6 +57,7 @@
     app.initWS = function() {
         // Clear reset timer
         clearTimeout(app.retry.timer);
+        app.history.pongs = [];
 
         app.connection = new WebSocket("ws://" + window.location.host + "/hi?uuid=" + app.uuid);
 
@@ -120,11 +124,36 @@
     app.pong = function(data) {
         if(!app.stopped) {
             app.delay = Math.abs((new Date()).getTime() - app.lastPingDate.getTime());
+            app.speedometer(app.delay);
+
             app.sendPing();
         }
         else {
             console.log("Application stopped do break ping-pong loop")
         }
+    },
+
+    app.speedometer = function(delay) {
+      // Make some stats
+      var history = this.history;
+      history.pongs = history.pongs.slice(history.maxPoints);
+      history.pongs.push(delay);
+
+      var max = Math.max.apply(null, history.pongs),
+          min = Math.min.apply(null, history.pongs),
+          range = max - min,
+          total = history.pongs.reduce(function(ac, e){
+            return ac + e;
+          }, 0);
+          avg = total / history.pongs.length,
+          perc = range == 0 ? 1 : (avg - min) / range;
+  
+      // Change the speedometer color (if we have a range of values)    
+      if(range > 20) {
+        var hue = (120 * perc) >> 0;
+        $("h1").style.color = "hsl(" + hue + ", 100%, 35%)";
+      } 
+
     }
 
     win.document.addEventListener("DOMContentLoaded", app.init, false);
