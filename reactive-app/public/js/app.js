@@ -68,8 +68,10 @@
         }
 
         app.connection.onclose = function (event) {
-          app.logs("Connection closed.... retrying") ;
+          app.logs("Connection closed. Retry:" + (!app.stopped));
           app.connection = null;
+          if(app.stopped) return;
+
           app.retry.timer = setTimeout(function() {
             app.initWS();
           }, app.retry.interval);
@@ -90,7 +92,6 @@
 
         app.lastPingDate = new Date();
         var ping = { 
-            position: app.lastLocation.latitude + "," + app.lastLocation.longitude,
             uuid: app.uuid.toString(),
             position: app.location.latitude + "," + app.location.longitude,
             latency: app.delay

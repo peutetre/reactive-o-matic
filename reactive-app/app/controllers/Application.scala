@@ -71,7 +71,7 @@ object Rooms {
   def enter(uuid:String): Enumerator[String] = {
       val e = Concurrent.unicast[String]( channel => {
           clients += (uuid -> channel)
-        println("New client "+uuid)
+          println("New client "+uuid)
         }, () => clients = clients - uuid)
         e
       }
