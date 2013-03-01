@@ -140,22 +140,20 @@
       history.pongs = history.pongs.slice(-history.maxPoints);
       history.pongs.push(delay);
 
-      var max = Math.max.apply(null, history.pongs),
-          min = Math.min.apply(null, history.pongs),
+      var max = Math.max.apply(Math, history.pongs),
+          min = Math.min.apply(Math, history.pongs),
           range = max - min,
           total = history.pongs.reduce(function(ac, e){
             return ac + e;
-          }, 0);
+          }, 0),
           avg = total / history.pongs.length,
           perc = range == 0 ? 1 : (avg - min) / range;
   
-        // Change the speedometer color (if we have a range of values)    
-        if(range > 20) {
-          var hue = (120 * perc) >> 0;
-          this.speedoColor(hue);
-        }
-        
-        this.updateStats(avg, max, min);
+      // Change the speedometer color
+      var hue = (120 * perc) >> 0;
+      this.speedoColor(hue);
+
+      this.updateStats(avg, max, min);
     };
 
     app.speedoColor = function(col) {
