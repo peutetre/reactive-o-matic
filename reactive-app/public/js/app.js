@@ -16,7 +16,7 @@
         delay: -1,
         history: {
           pongs: [],
-          maxPoints: 50
+          maxPoints: 500
         },
         retry: {
           interval: 1000,
@@ -154,10 +154,18 @@
           var hue = (120 * perc) >> 0;
           this.speedoColor(hue);
         }
+        
+        this.updateStats(avg, max, min);
     };
 
     app.speedoColor = function(col) {
       $("#oh").style.color = col ? "hsl(" + col + ", 100%, 35%)" : "inherit";
+    };
+
+    app.updateStats = function(avg, max, min){
+      $(".mean").innerHTML  = avg.toFixed(3);
+      $(".max").innerHTML   = max;
+      $(".min").innerHTML   = min;
     }
 
     win.document.addEventListener("DOMContentLoaded", app.init, false);

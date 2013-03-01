@@ -2,12 +2,19 @@
 
 @main("Reactive-O-matic") {
 	<h1>Reactive-<span id="oh">O</span>-matic</h1>
+
+        <div class="stats">
+          Mean (ms) : <span class="mean">0</span>
+          | Max (ms) : <span class="max">0</span>
+          | Min (ms) : <span class="min">0</span>
+        </div>
+
 	<div class="logs-container"></div>
-    <div class="buttonbar">
-        <button class="play icon-play"></button>
-        <button class="stop icon-stop"></button>
-        <button class="reset icon-trash"></button>
-    </div>
+        <div class="buttonbar">
+            <button class="play icon-play"></button>
+            <button class="stop icon-stop"></button>
+            <button class="reset icon-trash"></button>
+        </div>
 
 	<script src="@routes.Assets.at("js/app.js")"></script>
 	<script src="@routes.Assets.at("js/geolocation.js")"></script>
