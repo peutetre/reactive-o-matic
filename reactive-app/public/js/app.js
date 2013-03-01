@@ -17,13 +17,13 @@
         retry: {
           interval: 1000,
           count: 0
-        }
+        },
+        $logsContainer:null,
+        lastLogTimeStamp: (new Date).getTime()
     };
 
     app.init = function() {
         app.me = { id: new Date().getTime() };
-        console.log("Init application");
-
         // bind view events
         app.bindViewEvents();
     };
@@ -60,14 +60,16 @@
         app.connection.onopen = function (event) {
           app.sendPing();
         };
-        app.connection.onmessage = function (event) {
-          app.pong(event.data);
-        }
-        app.connection.onerror = function (event) {
-          console.log("Received error from WS : " + event.data);
-        }
 
-        app.connection.onclose = function (event) {
+        app.connection.onmessage = function (evt) {
+          app.pong(evt.data);
+        };
+
+        app.connection.onerror = function (evt) {
+          app.logs(evt, "red");
+        };
+
+        app.connection.onclose = function (evt) {
           app.logs("Connection closed. Retry:" + (!app.stopped));
           app.connection = null;
           if(app.stopped) return;
@@ -75,11 +77,12 @@
           app.retry.timer = setTimeout(function() {
             app.initWS();
           }, app.retry.interval);
-          
+
         }
     }
 
     app.sendPing = function() {
+
         if(Date.now() - app.location.time > app.location.interval) {
           app.logs("Fetching geo");
           app.location.time = Date.now();
@@ -91,19 +94,23 @@
         }
 
         app.lastPingDate = new Date();
-        var ping = { 
+        var ping = {
             uuid: app.uuid.toString(),
             position: app.location.latitude + "," + app.location.longitude,
             latency: app.delay
         };
-        app.logs("Ping " + JSON.stringify(ping) + " ...");
+        app.logs("Ping: latency ▶ " + ping.latency + " ms", "green");
         app.connection.send(JSON.stringify(ping));
     }
 
-    app.logs = function(message) {
-        //console.log(message)    
-        var $logsContainer = $(".logs-container");
-        $logsContainer.innerHTML = "<p>[" + (new Date()).toISOString() + "] " + message + "</p>" + $logsContainer.innerHTML;
+    app.logs = function(message, cls) {
+        if ((new Date).getTime() - app.lastLogTimeStamp > 100) {
+            if(!app.$logsContainer) $logsContainer = $(".logs-container");
+            var i = document.createElement("p");
+            if (cls) i.className = cls;
+            $logsContainer.innerHTML =  "<p>[" + (new Date()).toDateString() + "] " + message + "</p>" + $logsContainer.innerHTML;
+            app.lastLogTimeStamp = (new Date).getTime();
+        }
     }
 
     app.clearLogs = function() {
@@ -111,7 +118,6 @@
     }
 
     app.pong = function(data) {
-        app.logs("Pong : " + data);
         if(!app.stopped) {
             app.delay = Math.abs((new Date()).getTime() - app.lastPingDate.getTime());
             app.sendPing();
