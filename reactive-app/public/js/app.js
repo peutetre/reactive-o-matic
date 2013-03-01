@@ -86,9 +86,7 @@
     }
 
     app.sendPing = function() {
-      if(Date.now() - app.location.time > 4990) {
-        console.log(Date.now() - app.location.time, app.location.interval)
-      }
+        // Update Geolocation, if it's time
         if(Date.now() - app.location.time > app.location.interval) {
           app.logs("Fetching geo location");
           app.location.time = Date.now();
@@ -128,7 +126,6 @@
         if(!app.stopped) {
             app.delay = Math.abs((new Date()).getTime() - app.lastPingDate.getTime());
             app.speedometer(app.delay);
-
             app.sendPing();
         }
         else {
