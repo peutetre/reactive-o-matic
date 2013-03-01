@@ -41,6 +41,7 @@
         $(".stop").addEventListener("click", function() {
             app.logs("User triggered Stop button");
             app.stopped = true;
+            app.speedoColor(null);
         });
 
         $(".reset").addEventListener("click", function() {
@@ -131,12 +132,12 @@
         else {
             console.log("Application stopped do break ping-pong loop")
         }
-    },
+    };
 
     app.speedometer = function(delay) {
       // Make some stats
       var history = this.history;
-      history.pongs = history.pongs.slice(history.maxPoints);
+      history.pongs = history.pongs.slice(-history.maxPoints);
       history.pongs.push(delay);
 
       var max = Math.max.apply(null, history.pongs),
@@ -148,12 +149,15 @@
           avg = total / history.pongs.length,
           perc = range == 0 ? 1 : (avg - min) / range;
   
-      // Change the speedometer color (if we have a range of values)    
-      if(range > 20) {
-        var hue = (120 * perc) >> 0;
-        $("h1").style.color = "hsl(" + hue + ", 100%, 35%)";
-      } 
+        // Change the speedometer color (if we have a range of values)    
+        if(range > 20) {
+          var hue = (120 * perc) >> 0;
+          this.speedoColor(hue);
+        }
+    };
 
+    app.speedoColor = function(col) {
+      $("#oh").style.color = col ? "hsl(" + col + ", 100%, 35%)" : "inherit";
     }
 
     win.document.addEventListener("DOMContentLoaded", app.init, false);
