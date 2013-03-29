@@ -8,9 +8,7 @@ import java.util.Date
 import models.Ping
 import concurrent.{Future, ExecutionContext}
 import ExecutionContext.Implicits.global
-import concurrent.duration.Duration
 import scala.concurrent.duration._
-import play.api.libs.iteratee._
 
 object Application extends Controller {
   val LOGGER = play.api.Logger("APPLICATION")
