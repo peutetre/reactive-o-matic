@@ -1,0 +1,79 @@
+@(uuid:String)
+
+@main("Reactive-O-matic") {
+    <style>
+        svg {
+            font: 10px sans-serif;
+        }
+        #chart {
+            width:800px;
+            height:400px;
+            position:absolute;
+            left:50%;
+            top:50%;
+            margin:-200px 0 0 -400px;
+        }
+
+        .line {
+            fill: none;
+            stroke: #000;
+            stroke-width: 1.5px;
+        }
+
+        .area {
+            fill: #969696;
+        }
+        .axis path, .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+    </style>
+    <script src="@routes.Assets.at("js/d3.v3.js")"></script>
+    <script src="@routes.Assets.at("javascripts/time-series-chart.js")"></script>
+    <script>
+
+            var xF = function(d) {
+                    var date = new Date();
+                    date.setTime(d.time);
+                    return date;
+                },
+                yF = function(d) {
+                    return +(d.latency < 0 ? 0 : d.latency);
+                },
+                chart = timeSeriesChart({ width: 800, height: 400}).x(xF).y(yF);
+
+            d3.json('/chart/history/@uuid', function(data) {
+                d3.select("#chart")
+                    .datum(data)
+                    .call(chart);
+
+                var updateChart = function (d) {
+                    data.shift();
+                    data.push(d);
+                    d3.select("#chart")
+                        .datum(data)
+                        .call(chart)
+                };
+
+                setTimeout(function(){
+                    var source = new EventSource('/chart/stream/@uuid');
+                    source.onopen = function(e){
+                        console.log("Connecting event stream");
+                    }
+                    source.onmessage = function(e) {
+                        var dd = JSON.parse(e.data);
+                        console.log(dd);
+                        updateChart(dd);
+                    };
+                    source.onerror = function(err){
+                        console.log(err)
+                    };
+                },1000);
+            });
+
+
+    </script>
+    <div id="chart"></div>
+}
+

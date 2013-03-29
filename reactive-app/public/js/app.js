@@ -29,6 +29,7 @@
     app.init = function() {
         // bind view events
         app.bindViewEvents();
+        $('.to-chart').setAttribute('href',window.location.protocol+'//'+window.location.host +'/chart/'+app.uuid);
     };
 
     app.bindViewEvents = function() {

@@ -15,7 +15,6 @@ object Ping {
   val db = ReactiveMongoPlugin.db
   lazy val collection = db("pings")
 
-
   /*
   *
   * {
@@ -29,7 +28,7 @@ object Ping {
 
   def byUUID(uuid:String):Future[JsArray] = {
     val qb = QueryBuilder().query(Json.obj( "uuid" -> uuid )).sort( "time" -> SortOrder.Ascending)
-    collection.find[JsValue]( qb ).toList.map { pings =>
+    collection.find[JsValue]( qb ).toList(50).map { pings =>
       pings.foldLeft(JsArray(List()))((obj, ping) => obj ++ Json.arr(ping))
     }
   }
