@@ -54,7 +54,7 @@ object Application extends Controller {
     ).as("text/event-stream")
   })
 
-  def folder(d:Duration) = Iteratee.fold2[JsValue,(Option[Long], List[JsValue])]((None:Option[Long], List[JsValue]())){
+  def folder(d:Duration):Iteratee[JsValue,(Option[Long], List[JsValue])] = Iteratee.fold2[JsValue,(Option[Long], List[JsValue])]((None:Option[Long], List[JsValue]())){
     case ((t,els),e) => {
       val now = new Date().getTime
       val current = t.getOrElse(now)
