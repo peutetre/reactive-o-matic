@@ -49,6 +49,8 @@ function timeSeriesChart(opts) {
 
             // Otherwise, create the skeletal chart.
             var gEnter = svg.enter().append("svg").append("g");
+
+            if(conf.title) gEnter.append("text").attr('class','title').text(conf.title)
             gEnter.append("path").attr("class", "area");
             gEnter.append("path").attr("class", "line");
             gEnter.append("g").attr("class", "x axis");

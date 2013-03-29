@@ -13,6 +13,10 @@
             top:50%;
             margin:-200px 0 0 -400px;
         }
+        .title {
+            font: 300 28px Helvetica Neue;
+            fill: #666;
+        }
 
         .line {
             fill: none;
@@ -41,7 +45,7 @@
                 yF = function(d) {
                     return +(d.latency < 0 ? 0 : d.latency);
                 },
-                chart = timeSeriesChart({ width: 800, height: 400}).x(xF).y(yF);
+                chart = timeSeriesChart({ title:"latency = f(t)", width: 800, height: 400}).x(xF).y(yF);
 
             d3.json('/chart/history/@uuid', function(data) {
                 d3.select("#chart")

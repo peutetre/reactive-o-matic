@@ -57,7 +57,7 @@ object Application extends Controller {
   })
 
   def folder(d:Duration) = Iteratee.fold2[JsValue,(Option[Long], List[JsValue])]((None:Option[Long], List[JsValue]())){
-    case x @ ((t,els),e) => {
+    case ((t,els),e) => {
       val now = new Date().getTime
       val current = t.getOrElse(now)
       val done = now - current >= d.toMillis
