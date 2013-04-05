@@ -11,8 +11,7 @@ function timeSeriesChart(opts) {
         yScale = d3.scale.linear(),
         xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(3, 0),
         yAxis = d3.svg.axis().scale(yScale).orient("right").ticks(5).tickSize(3, 0),
-        area = d3.svg.area().x(X).y1(Y),
-        line = d3.svg.line().x(X).y(Y);
+        line = d3.svg.line().x(X).y(Y).interpolate("basis");
 
     function extend(a, b){
         for(var key in b)
@@ -50,11 +49,10 @@ function timeSeriesChart(opts) {
             // Otherwise, create the skeletal chart.
             var gEnter = svg.enter().append("svg").append("g");
 
-            if(conf.title) gEnter.append("text").attr('class','title').text(conf.title)
-            gEnter.append("path").attr("class", "area");
+            if(conf.title) gEnter.append("text").attr('class','title').text(conf.title);
             gEnter.append("path").attr("class", "line");
             gEnter.append("g").attr("class", "x axis");
-            gEnter.append("g").attr("class", "y axis");
+            gEnter.append("g").attr("class", "y axis").attr("transform", "translate(0,0)");
 
             // Update the outer dimensions.
             svg .attr("width", width)
@@ -64,26 +62,27 @@ function timeSeriesChart(opts) {
             var g = svg.select("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            // Update the area path.
-            g.select(".area")
-                .transition()
-                .duration(500)
-                .attr("d", area.y0(yScale.range()[0]));
-
             // Update the line path.
             g.select(".line")
                 .transition()
+                .ease("linear")
                 .duration(500)
                 .attr("d", line);
 
             // Update the x-axis.
             g.select(".x.axis")
                 .attr("transform", "translate(0," + yScale.range()[0] + ")")
+                .transition()
+                .ease("linear")
+                .duration(500)
                 .call(xAxis);
 
             // Update the y-axis.
             g.select(".y.axis")
                 .attr("transform", "translate("+xScale.range()[1]+",0)")
+                .transition()
+                .ease("linear")
+                .duration(500)
                 .call(yAxis);
         });
     }

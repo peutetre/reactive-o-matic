@@ -53,7 +53,7 @@
                     .call(chart);
 
                 var updateChart = function (d) {
-                    data.shift();
+                    if(data.length > 2*60) data.shift(); // we do not keep more than 2 minutes, 1 cell of the array is the latency for 1 second
                     data.push(d);
                     d3.select("#chart")
                         .datum(data)
